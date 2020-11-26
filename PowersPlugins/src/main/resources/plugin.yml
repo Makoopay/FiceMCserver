@@ -1,0 +1,5 @@
+name: PowersPlugin
+version: ${project.version}
+main: com.makoopay.powersplugin.powersplugin.PowersPlugin
+authors: [ Makoopay ]
+description: PluginPowers

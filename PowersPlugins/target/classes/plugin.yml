@@ -1,0 +1,5 @@
+name: PowersPlugin
+version: 1.0-SNAPSHOT
+main: com.makoopay.powersplugin.powersplugin.PowersPlugin
+authors: [ Makoopay ]
+description: PluginPowers
