@@ -43,7 +43,7 @@ public class PowerEvent implements Listener {
 
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 
-            if (p.getItemInHand().getType() == Material.YELLOW_FLOWER) {
+            if (p.getItemInHand().getType() == Material.WOOD_SWORD) {
 
                 p.sendMessage(ChatColor.GREEN + " +1 Points ");
 
