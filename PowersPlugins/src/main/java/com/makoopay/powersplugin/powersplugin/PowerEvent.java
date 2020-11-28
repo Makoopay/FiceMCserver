@@ -1,5 +1,6 @@
 package com.makoopay.powersplugin.powersplugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -9,18 +10,32 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.*;
+
+import java.util.HashMap;
+import java.util.UUID;
+
 
 public class PowerEvent implements Listener {
     
     
+
+    private final HashMap<UUID, Integer> points = new HashMap<>();
+    
+
     @EventHandler
     public void onJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+
+        // add the player to the hashmap if missing
+        points.putIfAbsent(event.getPlayer().getUniqueId(), 0);
+
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         Objective objective = scoreboard.registerNewObjective("FiceMC", "Point Counter");
-        objective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "§f§l   FicePoints   §f");
 
         Team team = scoreboard.registerNewTeam("point_counter");
@@ -29,7 +44,7 @@ public class PowerEvent implements Listener {
 
         team.setPrefix(ChatColor.RED + "Points: " + ChatColor.WHITE);
 
-        team.setSuffix("0");
+        team.setSuffix( String.valueOf( points.get( event.getPlayer().getUniqueId() ) ) );
 
         objective.getScore(ChatColor.WHITE.toString()).setScore(1);
 
@@ -40,10 +55,9 @@ public class PowerEvent implements Listener {
     public void onPlayerUse(PlayerInteractEvent event) {
         Player p = event.getPlayer();
 
-
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 
-            if (p.getItemInHand().getType() == Material.WOOD_SWORD) {
+            if (p.getInventory().getItemInMainHand().getType() == Material.WOOD_SWORD) {
 
                 p.sendMessage(ChatColor.GREEN + " +1 Points ");
 
@@ -53,16 +67,16 @@ public class PowerEvent implements Listener {
 
                 Team team = scoreboard.getTeam("point_counter");
 
-                int points = Integer.parseInt(team.getSuffix());
+                points.put(
+                        event.getPlayer().getUniqueId(),
+                        points.get( event.getPlayer().getUniqueId() ) + 1
+                );
 
-                team.setSuffix(Integer.toString(points + 1));
-
-                p.getInventory().remove(p.getItemInHand());
-
+                team.setSuffix( String.valueOf( points.get( event.getPlayer().getUniqueId() ) ) );
 
 
             }
+
         }
     }
-
 }
